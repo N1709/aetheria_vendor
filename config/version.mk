@@ -24,7 +24,6 @@ AETHERIA_OFFICIAL_JSON := $(shell cat /tmp/aetheria_official_devices/$(AETHERIA_
 
 AETHERIA_CHECK_USER := $(shell echo '$(AETHERIA_OFFICIAL_JSON)' | python3 -c "import sys,json; d=json.load(sys.stdin); print('match') if d.get('github_username')=='$(AETHERIA_GITHUB_USER)' else print('nomatch')" 2>/dev/null)
 
-# Warning cuma kalau proses fetch-nya gagal (clone gagal atau file device-nya gak ketemu)
 ifneq ($(AETHERIA_CLONE_STATUS),0)
     $(warning $(shell printf "$(AETHERIA_YELLOW)WARNING$(AETHERIA_NC): AetheriaOS failed to clone aetheria_official_devices (check SSH keys/connections) - this build will be marked as UNOFFICIAL"))
 else
