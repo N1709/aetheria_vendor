@@ -1,14 +1,13 @@
 # Allow vendor/extra to override any property by setting it first
 $(call inherit-product-if-exists, vendor/extra/product.mk)
 
-# Exclude repos from bp scanning
+# Exclude kernel platform repos from bp scanning
 PRODUCT_SOURCE_ROOT_DIRS += -kernel/platform
-PRODUCT_SOURCE_ROOT_DIRS += -prebuilts/misc/protobuf_vendorcompat
 
 # Allow vendor prebuilt repos to exclude themselves from bp scanning
 -include $(sort $(wildcard vendor/*/*/exclude-bp.mk))
 
-PRODUCT_BRAND ?= LineageOS
+PRODUCT_BRAND ?= AetheriaOS
 
 ifeq ($(PRODUCT_GMS_CLIENTID_BASE),)
 PRODUCT_PRODUCT_PROPERTIES += \
@@ -53,10 +52,10 @@ PRODUCT_COPY_FILES += \
     vendor/lineage/prebuilt/common/bin/backuptool.functions:install/bin/backuptool.functions
 
 PRODUCT_PACKAGES += \
-    50-lineage.sh
+    50-aetheria.sh
 
 PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
-    system/addon.d/50-lineage.sh
+    system/addon.d/50-aetheria.sh
 
 ifneq ($(strip $(AB_OTA_PARTITIONS) $(AB_OTA_POSTINSTALL_CONFIG)),)
 PRODUCT_COPY_FILES += \
@@ -138,7 +137,7 @@ TARGET_SCREEN_WIDTH ?= 1080
 TARGET_SCREEN_HEIGHT ?= 1920
 PRODUCT_PACKAGES += \
     bootanimation.zip \
-    bootanimation-dark.zip
+    bootanimation-dark.zip \
 
 # Lineage interfaces
 PRODUCT_PACKAGES += \
@@ -217,10 +216,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_COPY_FILES += \
     vendor/lineage/prebuilt/common/etc/init/init.openssh.rc:$(TARGET_COPY_OUT_PRODUCT)/etc/init/init.openssh.rc
-
-# OverlayFS
-PRODUCT_PACKAGES_DEBUG += \
-    disable-overlays
 
 # rsync
 PRODUCT_PACKAGES += \
@@ -305,3 +300,16 @@ include vendor/lineage/config/version.mk
 
 -include $(WORKSPACE)/build_env/image-auto-bits.mk
 -include vendor/lineage/config/partner_gms.mk
+
+PRODUCT_SOONG_NAMESPACES += \
+    hardware/qcom-caf/wlan \
+    hardware/qcom-caf/wlan/qcwcn
+
+ifneq ($(TARGET_BOARD_PLATFORM),)
+PRODUCT_SOONG_NAMESPACES += \
+    $(wildcard hardware/*/$(TARGET_BOARD_PLATFORM)) \
+    $(wildcard kernel/*/$(TARGET_BOARD_PLATFORM)) \
+    $(wildcard vendor/*/$(TARGET_BOARD_PLATFORM)) \
+    $(wildcard device/*/$(TARGET_BOARD_PLATFORM)-common)
+endif
+PRODUCT_PACKAGE_OVERLAYS += vendor/lineage/overlay
