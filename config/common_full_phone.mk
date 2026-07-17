@@ -7,3 +7,4 @@ PRODUCT_PRODUCT_PROPERTIES += \
 
 $(call inherit-product, vendor/lineage/config/telephony.mk)
 $(call inherit-product-if-exists, vendor/pixel/clocks/products/clocks.mk)
+$(call inherit-product-if-exists, vendor/pixel/themepicker/products/themepicker.mk)
